@@ -24,7 +24,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install .
 
-- name: Esegui lo script
+      - name: Esegui lo script
         env:
           LETTERBOXD_USERNAME: ${{ secrets.LETTERBOXD_USERNAME }}
           LETTERBOXD_PASSWORD: ${{ secrets.LETTERBOXD_PASSWORD }}
