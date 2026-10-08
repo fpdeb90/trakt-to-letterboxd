@@ -1,0 +1,36 @@
+name: Trakt to Letterboxd Sync
+
+on:
+  schedule:
+    # Esegue lo script ogni giorno alle 03:00 UTC
+    - cron: '0 3 * * *'
+  # Permette di avviare l'azione anche manualmente da GitHub tramite un pulsante
+  workflow_dispatch: 
+
+jobs:
+  esegui-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clona il repository
+        uses: actions/checkout@v4
+
+      - name: Configura l'ambiente Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11' # Puoi adattarla alla versione richiesta dallo script
+          cache: 'pip' # Velocizza le esecuzioni successive
+
+      - name: Installa le dipendenze
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Esegui lo script di sincronizzazione
+        env:
+          # Mappa i Secrets di GitHub come variabili d'ambiente per Python
+          LETTERBOXD_USERNAME: ${{ secrets.LETTERBOXD_USERNAME }}
+          LETTERBOXD_PASSWORD: ${{ secrets.LETTERBOXD_PASSWORD }}
+          TRAKT_API_KEY: ${{ secrets.TRAKT_API_KEY }}
+        run: |
+          python sync.py
